@@ -87,6 +87,7 @@ export async function handleChatCore({ body, modelInfo, credentials, log, onCred
 
   let translatedBody;
   let toolNameMap;
+  let toolNameNSMap;
   if (passthrough) {
     log?.debug?.("PASSTHROUGH", `${clientTool} → ${provider} | native lossless`);
     translatedBody = { ...body, model };
@@ -98,6 +99,8 @@ export async function handleChatCore({ body, modelInfo, credentials, log, onCred
     }
     toolNameMap = translatedBody._toolNameMap;
     delete translatedBody._toolNameMap;
+    toolNameNSMap = translatedBody._toolNameNSMap;
+    delete translatedBody._toolNameNSMap;
     translatedBody.model = model;
   }
 
@@ -267,7 +270,7 @@ export async function handleChatCore({ body, modelInfo, credentials, log, onCred
 
   // Streaming response
   const { onStreamComplete } = buildOnStreamComplete({ ...sharedCtx });
-  return handleStreamingResponse({ ...sharedCtx, providerResponse, sourceFormat, targetFormat, userAgent, reqLogger, toolNameMap, streamController, onStreamComplete });
+  return handleStreamingResponse({ ...sharedCtx, providerResponse, sourceFormat, targetFormat, userAgent, reqLogger, toolNameMap, toolNameNSMap, streamController, onStreamComplete });
 }
 
 export function isTokenExpiringSoon(expiresAt, bufferMs = 5 * 60 * 1000) {
