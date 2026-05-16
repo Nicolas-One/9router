@@ -764,5 +764,14 @@
   "Click to add, click again to remove. Changes are saved automatically.": "点击添加，再次点击删除。更改将自动保存。",
   "Close": "关闭",
   "⚠️ Risk Notice: This provider uses a subscription/OAuth session not officially licensed for proxy/router use. Account may be restricted or banned. Use at your own risk.": "⚠️ 风险提示：此提供商使用的订阅/OAuth 会话未获官方授权用于代理/路由器使用。账户可能被限制或封禁。使用风险自负。",
-  "⚠️ MITM intercepts HTTPS traffic of IDE tools (Antigravity, GitHub Copilot, Kiro) via local CA to redirect requests to your providers. May violate ToS → account ban. Use at your own risk.": "⚠️ MITM 通过本地 CA 拦截 IDE 工具（Antigravity、GitHub Copilot、Kiro）的 HTTPS 流量，将请求重定向到您的提供商。可能违反 ToS → 账户封禁风险。使用风险自负。"
+  "⚠️ MITM intercepts HTTPS traffic of IDE tools (Antigravity, GitHub Copilot, Kiro) via local CA to redirect requests to your providers. May violate ToS → account ban. Use at your own risk.": "⚠️ MITM 通过本地 CA 拦截 IDE 工具（Antigravity、GitHub Copilot、Kiro）的 HTTPS 流量，将请求重定向到您的提供商。可能违反 ToS → 账户封禁风险。使用风险自负。",
+  "Export Config": "导出配置",
+  "Import Config": "导入配置",
+  "Import Provider Config": "导入提供商配置",
+  "Import & Replace": "导入并替换",
+  "Export failed": "导出失败",
+  "Import failed": "导入失败",
+  "Provider config exported": "提供商配置已导出",
+  "Provider config imported successfully": "提供商配置导入成功",
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "这将用导入的配置替换所有现有的提供商连接、节点、代理池和模型设置。此操作无法撤销。"
 }
