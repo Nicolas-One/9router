@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "স্থানীয়",
+  "Local (No Key)": "স্থানীয় (কী নেই)",
+  "All Keys": "সমস্ত কী",
+  "No content": "কোনো বিষয়বস্তু নেই",
+  "See Thinking Process above": "উপরে চিন্তা প্রক্রিয়া দেখুন",
+  "Empty response object": "খালি প্রতিক্রিয়া বস্তু",
+  "ID:": "ID：",
+  "API Key:": "API কী：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "ছোট করা হয়েছে — মূল আকার",
+  "Streaming response not captured — see section 4 for final content": "স্ট্রিমিং প্রতিক্রিয়া ক্যাপচার করা হয়নি — চূড়ান্ত বিষয়বস্তুর জন্য বিভাগ 4 দেখুন"
 }

@@ -199,5 +199,16 @@
   "Import failed": "가져오기 실패",
   "Provider config exported": "공급자 설정을 내보냈습니다",
   "Provider config imported successfully": "공급자 설정을 가져왔습니다",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "가져온 설정으로 모든 기존 공급자 연결, 노드, 프록시 풀 및 모델 설정을 교체합니다. 이 작업은 취소할 수 없습니다."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "가져온 설정으로 모든 기존 공급자 연결, 노드, 프록시 풀 및 모델 설정을 교체합니다. 이 작업은 취소할 수 없습니다.",
+  "Local": "로컬",
+  "Local (No Key)": "로컬 (키 없음)",
+  "All Keys": "모든 키",
+  "No content": "콘텐츠 없음",
+  "See Thinking Process above": "위의 사고 과정 참조",
+  "Empty response object": "빈 응답 객체",
+  "ID:": "ID：",
+  "API Key:": "API 키：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "잘림 — 원본 크기",
+  "Streaming response not captured — see section 4 for final content": "스트리밍 응답이 캡처되지 않음 — 최종 콘텐츠는 섹션 4를 참조"
 }

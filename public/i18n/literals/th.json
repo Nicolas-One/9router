@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "ภายใน",
+  "Local (No Key)": "ภายใน (ไม่มีคีย์)",
+  "All Keys": "คีย์ทั้งหมด",
+  "No content": "ไม่มีเนื้อหา",
+  "See Thinking Process above": "ดูกระบวนการคิดด้านบน",
+  "Empty response object": "อ็อบเจกต์การตอบกลับว่างเปล่า",
+  "ID:": "ID：",
+  "API Key:": "คีย์ API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "ถูกตัด — ขนาดดั้งเดิม",
+  "Streaming response not captured — see section 4 for final content": "ไม่ได้บันทึกการตอบกลับแบบสตรีม — ดูส่วนที่ 4 สำหรับเนื้อหาสุดท้าย"
 }

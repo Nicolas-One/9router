@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Lokal",
+  "Local (No Key)": "Lokal (Walang Susi)",
+  "All Keys": "Lahat ng Susi",
+  "No content": "Walang nilalaman",
+  "See Thinking Process above": "Tingnan ang proseso ng pag-iisip sa itaas",
+  "Empty response object": "Walang laman na bagay sa tugon",
+  "ID:": "ID：",
+  "API Key:": "Susi ng API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Pinutol — orihinal na laki",
+  "Streaming response not captured — see section 4 for final content": "Hindi nakuha ang streaming na tugon — tingnan ang seksyon 4 para sa panghuling nilalaman"
 }

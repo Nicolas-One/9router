@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Paikallinen",
+  "Local (No Key)": "Paikallinen (ei avainta)",
+  "All Keys": "Kaikki avaimet",
+  "No content": "Ei sisältöä",
+  "See Thinking Process above": "Katso ajatusprosessi yllä",
+  "Empty response object": "Tyhjä vastausobjekti",
+  "ID:": "ID：",
+  "API Key:": "API-avain：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Katkaistu — alkuperäinen koko",
+  "Streaming response not captured — see section 4 for final content": "Suoratoistovastausta ei tallennettu — katso osio 4 lopullisesta sisällöstä"
 }

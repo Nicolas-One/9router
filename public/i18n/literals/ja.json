@@ -199,5 +199,16 @@
   "Import failed": "インポートに失敗しました",
   "Provider config exported": "プロバイダー設定をエクスポートしました",
   "Provider config imported successfully": "プロバイダー設定をインポートしました",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "インポートした設定ですべての既存のプロバイダー接続、ノード、プロキシプール、モデル設定を置き換えます。この操作は元に戻せません。"
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "インポートした設定ですべての既存のプロバイダー接続、ノード、プロキシプール、モデル設定を置き換えます。この操作は元に戻せません。",
+  "Local": "ローカル",
+  "Local (No Key)": "ローカル（キーなし）",
+  "All Keys": "すべてのキー",
+  "No content": "コンテンツなし",
+  "See Thinking Process above": "上の思考プロセスを参照",
+  "Empty response object": "空のレスポンスオブジェクト",
+  "ID:": "ID：",
+  "API Key:": "APIキー：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "切り捨て済み — 元のサイズ",
+  "Streaming response not captured — see section 4 for final content": "ストリーミングレスポンスはキャプチャされませんでした — 最終コンテンツはセクション4を参照"
 }

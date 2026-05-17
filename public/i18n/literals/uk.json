@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Локальний",
+  "Local (No Key)": "Локальний (без ключа)",
+  "All Keys": "Усі ключі",
+  "No content": "Немає вмісту",
+  "See Thinking Process above": "Див. процес мислення вище",
+  "Empty response object": "Порожній обʼєкт відповіді",
+  "ID:": "ID：",
+  "API Key:": "API-ключ：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Обрізано — оригінальний розмір",
+  "Streaming response not captured — see section 4 for final content": "Потокова відповідь не записана — див. розділ 4 для фінального вмісту"
 }

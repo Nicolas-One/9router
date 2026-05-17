@@ -773,5 +773,16 @@
   "Import failed": "导入失败",
   "Provider config exported": "提供商配置已导出",
   "Provider config imported successfully": "提供商配置导入成功",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "这将用导入的配置替换所有现有的提供商连接、节点、代理池和模型设置。此操作无法撤销。"
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "这将用导入的配置替换所有现有的提供商连接、节点、代理池和模型设置。此操作无法撤销。",
+  "Local": "本地",
+  "Local (No Key)": "本地（无密钥）",
+  "All Keys": "所有密钥",
+  "No content": "无内容",
+  "See Thinking Process above": "见上方思考过程",
+  "Empty response object": "空响应对象",
+  "ID:": "ID：",
+  "API Key:": "API密钥：",
+  "TTFT": "首Token延迟",
+  "Truncated — original size": "已截断 — 原始大小",
+  "Streaming response not captured — see section 4 for final content": "流式响应未捕获 — 请查看第4部分获取最终内容"
 }

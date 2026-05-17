@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Lokalny",
+  "Local (No Key)": "Lokalny (brak klucza)",
+  "All Keys": "Wszystkie klucze",
+  "No content": "Brak zawartości",
+  "See Thinking Process above": "Zobacz proces myślowy powyżej",
+  "Empty response object": "Pusty obiekt odpowiedzi",
+  "ID:": "ID：",
+  "API Key:": "Klucz API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Obcięto — oryginalny rozmiar",
+  "Streaming response not captured — see section 4 for final content": "Odpowiedź strumieniowa nie przechwycona — zobacz sekcję 4 dla końcowej treści"
 }

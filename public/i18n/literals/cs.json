@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Místní",
+  "Local (No Key)": "Místní (žádný klíč)",
+  "All Keys": "Všechny klíče",
+  "No content": "Žádný obsah",
+  "See Thinking Process above": "Viz myšlenkový proces výše",
+  "Empty response object": "Prázdný objekt odpovědi",
+  "ID:": "ID：",
+  "API Key:": "API klíč：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Zkráceno — původní velikost",
+  "Streaming response not captured — see section 4 for final content": "Streamovaná odpověď nebyla zachycena — viz sekce 4 pro konečný obsah"
 }

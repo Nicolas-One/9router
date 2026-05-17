@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Badge, Toggle } from "@/shared/components";
 import CooldownTimer from "./CooldownTimer";
 
-export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst, isLast, onMoveUp, onMoveDown, onToggleActive, onUpdateProxy, onEdit, onDelete }) {
+export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst, isLast, onMoveUp, onMoveDown, onDragHandle, onToggleActive, onUpdateProxy, onEdit, onDelete }) {
   const [showProxyDropdown, setShowProxyDropdown] = useState(false);
   const [updatingProxy, setUpdatingProxy] = useState(false);
   const proxyDropdownRef = useRef(null);
@@ -112,6 +112,18 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
   return (
     <div className={`group flex min-w-0 flex-col gap-3 rounded-lg p-2 transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.02] sm:flex-row sm:items-center sm:justify-between ${connection.isActive === false ? "opacity-60" : ""}`}>
       <div className="flex min-w-0 flex-1 items-start gap-2 sm:items-center sm:gap-3">
+        {/* Drag handle */}
+        {onDragHandle && (
+          <button
+            {...onDragHandle.attributes}
+            {...onDragHandle.listeners}
+            type="button"
+            className="cursor-grab touch-none p-0.5 rounded text-text-muted hover:text-primary active:cursor-grabbing shrink-0"
+            title="Drag to reorder"
+          >
+            <span className="material-symbols-outlined text-base">drag_indicator</span>
+          </button>
+        )}
         {/* Priority arrows */}
         <div className="flex shrink-0 flex-col">
           <button
@@ -138,6 +150,16 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
             <Badge variant={getStatusVariant()} size="sm" dot>
               {connection.isActive === false ? "disabled" : (effectiveStatus || "Unknown")}
             </Badge>
+            {connection.autoDisabledReason === "circuit_breaker" && connection.autoDisabledAt && (
+              <Badge
+                variant="warning"
+                size="sm"
+                icon="electric_bolt"
+                title={`Auto-re-enable: ${new Date(new Date(connection.autoDisabledAt).getTime() + 5 * 60 * 1000).toLocaleString()}`}
+              >
+                Circuit Breaker
+              </Badge>
+            )}
             {hasAnyProxy && (
               <Badge variant={proxyBadgeVariant} size="sm">
                 Proxy
@@ -254,6 +276,10 @@ ConnectionRow.propTypes = {
   isLast: PropTypes.bool.isRequired,
   onMoveUp: PropTypes.func.isRequired,
   onMoveDown: PropTypes.func.isRequired,
+  onDragHandle: PropTypes.shape({
+    attributes: PropTypes.object,
+    listeners: PropTypes.object,
+  }),
   onToggleActive: PropTypes.func.isRequired,
   onUpdateProxy: PropTypes.func,
   onEdit: PropTypes.func.isRequired,

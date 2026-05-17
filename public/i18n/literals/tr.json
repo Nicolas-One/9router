@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Yerel",
+  "Local (No Key)": "Yerel (Anahtar Yok)",
+  "All Keys": "Tüm Anahtarlar",
+  "No content": "İçerik yok",
+  "See Thinking Process above": "Yukarıdaki düşünme sürecine bakın",
+  "Empty response object": "Boş yanıt nesnesi",
+  "ID:": "ID：",
+  "API Key:": "API Anahtarı：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Kısaltıldı — orijinal boyut",
+  "Streaming response not captured — see section 4 for final content": "Yanıt akışı yakalanmadı — son içerik için bölüm 4'e bakın"
 }

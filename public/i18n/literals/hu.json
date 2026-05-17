@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Helyi",
+  "Local (No Key)": "Helyi (nincs kulcs)",
+  "All Keys": "Minden kulcs",
+  "No content": "Nincs tartalom",
+  "See Thinking Process above": "Lásd a fenti gondolkodási folyamatot",
+  "Empty response object": "Üres válaszobjektum",
+  "ID:": "ID：",
+  "API Key:": "API-kulcs：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Csonkolt — eredeti méret",
+  "Streaming response not captured — see section 4 for final content": "Streaming válasz nem rögzített — lásd a 4. szakaszt a végleges tartalomért"
 }

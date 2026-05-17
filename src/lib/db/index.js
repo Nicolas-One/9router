@@ -1,6 +1,9 @@
 // Public API barrel — all DB functions
 import { getAdapter } from "./driver.js";
 import { stringifyJson, parseJson } from "./helpers/jsonCol.js";
+import fs from "node:fs";
+import path from "node:path";
+import { makeBackupDir } from "./backup.js";
 
 // Settings
 export {
@@ -98,6 +101,16 @@ export async function importDb(payload) {
     throw new Error("Invalid database payload");
   }
   const db = await getAdapter();
+
+  // Pre-import backup: save current state before wiping
+  try {
+    const currentData = await exportDb();
+    const backupDir = makeBackupDir("pre-import");
+    fs.writeFileSync(path.join(backupDir, "db.json"), JSON.stringify(currentData, null, 2));
+    console.log("[DB] Pre-import backup saved to", backupDir);
+  } catch (err) {
+    console.error("[DB] Pre-import backup failed:", err.message);
+  }
 
   db.transaction(() => {
     // Wipe all tables (keep _meta)
@@ -238,6 +251,16 @@ export async function importProviderConfig(payload) {
     throw new Error("Invalid provider config payload");
   }
   const db = await getAdapter();
+
+  // Pre-import backup: save current provider config before wiping
+  try {
+    const currentConfig = await exportProviderConfig();
+    const backupDir = makeBackupDir("pre-import");
+    fs.writeFileSync(path.join(backupDir, "provider-config.json"), JSON.stringify(currentConfig, null, 2));
+    console.log("[DB] Pre-import provider config backup saved to", backupDir);
+  } catch (err) {
+    console.error("[DB] Pre-import provider config backup failed:", err.message);
+  }
 
   db.transaction(() => {
     // Wipe only provider-related tables + kv scopes

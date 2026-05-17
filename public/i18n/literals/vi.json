@@ -199,5 +199,16 @@
   "Import failed": "Nhập thất bại",
   "Provider config exported": "Đã xuất cấu hình nhà cung cấp",
   "Provider config imported successfully": "Đã nhập cấu hình nhà cung cấp thành công",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "Thao tác này sẽ thay thế tất cả các kết nối, nút, nhóm proxy và cài đặt mô hình hiện có bằng cấu hình đã nhập. Hành động này không thể hoàn tác."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "Thao tác này sẽ thay thế tất cả các kết nối, nút, nhóm proxy và cài đặt mô hình hiện có bằng cấu hình đã nhập. Hành động này không thể hoàn tác.",
+  "Local": "Cục bộ",
+  "Local (No Key)": "Cục bộ (Không có khóa)",
+  "All Keys": "Tất cả khóa",
+  "No content": "Không có nội dung",
+  "See Thinking Process above": "Xem quá trình suy nghĩ ở trên",
+  "Empty response object": "Đối tượng phản hồi trống",
+  "ID:": "ID：",
+  "API Key:": "Khóa API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Đã cắt — kích thước gốc",
+  "Streaming response not captured — see section 4 for final content": "Phản hồi luồng không được ghi — xem phần 4 cho nội dung cuối cùng"
 }

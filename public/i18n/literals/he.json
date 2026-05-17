@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "מקומי",
+  "Local (No Key)": "מקומי (ללא מפתח)",
+  "All Keys": "כל המפתחות",
+  "No content": "אין תוכן",
+  "See Thinking Process above": "ראה תהליך חשיבה למעלה",
+  "Empty response object": "אובייקט תגובה ריק",
+  "ID:": "מזהה：",
+  "API Key:": "מפתח API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "קוצץ — גודל מקורי",
+  "Streaming response not captured — see section 4 for final content": "תגובת סטרימינג לא נלכדה — ראה חלק 4 לתוכן הסופי"
 }

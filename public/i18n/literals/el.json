@@ -199,5 +199,16 @@
   "Import failed": "Import failed",
   "Provider config exported": "Provider config exported",
   "Provider config imported successfully": "Provider config imported successfully",
-  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone."
+  "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.": "This will replace all existing provider connections, nodes, proxy pools, and model settings with the imported configuration. This action cannot be undone.",
+  "Local": "Τοπικό",
+  "Local (No Key)": "Τοπικό (χωρίς κλειδί)",
+  "All Keys": "Όλα τα κλειδιά",
+  "No content": "Χωρίς περιεχόμενο",
+  "See Thinking Process above": "Δείτε τη διαδικασία σκέψης παραπάνω",
+  "Empty response object": "Κενό αντικείμενο απόκρισης",
+  "ID:": "ID：",
+  "API Key:": "Κλειδί API：",
+  "TTFT": "TTFT",
+  "Truncated — original size": "Περικόπηκε — αρχικό μέγεθος",
+  "Streaming response not captured — see section 4 for final content": "Η απάντηση ροής δεν καταγράφηκε — δείτε την ενότητα 4 για το τελικό περιεχόμενο"
 }
