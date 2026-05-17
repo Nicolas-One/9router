@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Card from "@/shared/components/Card";
 import Button from "@/shared/components/Button";
 import Drawer from "@/shared/components/Drawer";
@@ -108,6 +108,13 @@ export default function RequestDetailsTab() {
     startDate: "",
     endDate: ""
   });
+  const [appliedFilters, setAppliedFilters] = useState({
+    provider: "",
+    apiKey: "",
+    startDate: "",
+    endDate: ""
+  });
+  const debounceRef = useRef(null);
 
   const fetchProviders = useCallback(async () => {
     try {
@@ -139,10 +146,10 @@ export default function RequestDetailsTab() {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString()
       });
-      if (filters.provider) params.append("provider", filters.provider);
-      if (filters.apiKey) params.append("apiKey", filters.apiKey);
-      if (filters.startDate) params.append("startDate", filters.startDate);
-      if (filters.endDate) params.append("endDate", filters.endDate);
+      if (appliedFilters.provider) params.append("provider", appliedFilters.provider);
+      if (appliedFilters.apiKey) params.append("apiKey", appliedFilters.apiKey);
+      if (appliedFilters.startDate) params.append("startDate", appliedFilters.startDate);
+      if (appliedFilters.endDate) params.append("endDate", appliedFilters.endDate);
 
       const res = await fetch(`/api/usage/request-details?${params}`);
       const data = await res.json();
@@ -154,12 +161,21 @@ export default function RequestDetailsTab() {
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.pageSize, filters]);
+  }, [pagination.page, pagination.pageSize, appliedFilters]);
 
   useEffect(() => {
     fetchProviders();
     fetchApiKeys();
   }, [fetchProviders, fetchApiKeys]);
+
+  // Debounce filter changes: apply after 300ms of inactivity
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setAppliedFilters(filters);
+    }, 300);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [filters]);
 
   useEffect(() => {
     fetchDetails();

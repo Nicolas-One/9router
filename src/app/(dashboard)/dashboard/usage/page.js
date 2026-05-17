@@ -65,14 +65,21 @@ function UsageContent() {
         )}
       </div>
 
-      {activeTab === "overview" && (
+      {/* Use CSS visibility to preserve component state across tab switches */}
+      <div style={{ display: activeTab === "overview" ? undefined : "none" }}>
         <Suspense fallback={<CardSkeleton />}>
           <UsageStats period={period} setPeriod={setPeriod} hidePeriodSelector />
         </Suspense>
-      )}
-      {activeTab === "logs" && <RequestLogger />}
-      {activeTab === "details" && <RequestDetailsTab />}
-      {activeTab === "api-keys" && <ApiKeyUsageTable period={period} />}
+      </div>
+      <div style={{ display: activeTab === "logs" ? undefined : "none" }}>
+        <RequestLogger />
+      </div>
+      <div style={{ display: activeTab === "details" ? undefined : "none" }}>
+        <RequestDetailsTab />
+      </div>
+      <div style={{ display: activeTab === "api-keys" ? undefined : "none" }}>
+        <ApiKeyUsageTable period={period} />
+      </div>
     </div>
   );
 }

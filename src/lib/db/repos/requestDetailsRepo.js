@@ -194,6 +194,12 @@ export async function getRequestDetails(filter = {}) {
   };
 }
 
+export async function getDistinctProviders() {
+  const db = await getAdapter();
+  const rows = db.all(`SELECT DISTINCT provider FROM requestDetails WHERE provider IS NOT NULL ORDER BY provider`);
+  return rows.map(r => r.provider);
+}
+
 export async function getRequestDetailById(id) {
   const db = await getAdapter();
   const row = db.get(`SELECT data, apiKey FROM requestDetails WHERE id = ?`, [id]);
