@@ -118,9 +118,23 @@ export function openaiResponsesToOpenAIRequest(model, body, stream, credentials)
   // Group items by conversation turn
   let currentAssistantMsg = null;
   let pendingToolResults = [];
+  let pendingReasoning = "";
 
   const inputItems = normalizeResponsesInput(body.input);
   if (!inputItems) return body;
+
+  // Extract reasoning text from summary[].text or encrypted_content fallback
+  const extractReasoningText = (item) => {
+    if (Array.isArray(item.summary)) {
+      const txt = item.summary.map(s => s?.text || "").filter(Boolean).join("\n");
+      if (txt) return txt;
+    }
+    if (Array.isArray(item.content)) {
+      const txt = item.content.map(c => c?.text || "").filter(Boolean).join("\n");
+      if (txt) return txt;
+    }
+    return "";
+  };
 
   for (const item of inputItems) {
     const itemType = item.type || (item.role ? "message" : null);
@@ -148,11 +162,25 @@ export function openaiResponsesToOpenAIRequest(model, body, stream, credentials)
             return c;
           })
         : item.content;
-      result.messages.push({ role: item.role, content });
+      const msg = { role: item.role, content };
+      // Attach buffered reasoning to assistant turn (required by xiaomi-mimo thinking mode)
+      if (item.role === "assistant" && pendingReasoning) {
+        msg.reasoning_content = pendingReasoning;
+      }
+      pendingReasoning = "";
+      result.messages.push(msg);
     }
     else if (itemType === "function_call") {
       if (!currentAssistantMsg) {
-        currentAssistantMsg = { role: "assistant", content: null, tool_calls: [] };
+        currentAssistantMsg = {
+          role: "assistant",
+          content: null,
+          tool_calls: []
+        };
+        if (pendingReasoning) {
+          currentAssistantMsg.reasoning_content = pendingReasoning;
+          pendingReasoning = "";
+        }
       }
       if (!item.name || typeof item.name !== "string" || item.name.trim() === "") continue;
       currentAssistantMsg.tool_calls.push({
@@ -182,6 +210,9 @@ export function openaiResponsesToOpenAIRequest(model, body, stream, credentials)
       });
     }
     else if (itemType === "reasoning") {
+      // Buffer reasoning text; attached to next assistant message/function_call
+      const txt = extractReasoningText(item);
+      if (txt) pendingReasoning = pendingReasoning ? `${pendingReasoning}\n${txt}` : txt;
       continue;
     }
   }
