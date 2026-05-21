@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,20 +21,11 @@ import AddApiKeyModal from "./AddApiKeyModal";
 import EditCompatibleNodeModal from "./EditCompatibleNodeModal";
 import AddCustomModelModal from "./AddCustomModelModal";
 
-function SortableConnectionRow({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    opacity: isDragging ? 0.4 : 1,
-    zIndex: isDragging ? 999 : undefined,
-  };
-  return (
-    <div ref={setNodeRef} style={style} className={isDragging ? "shadow-md ring-1 ring-primary/30 rounded-lg" : ""}>
-      {typeof children === "function" ? children({ attributes, listeners }) : children}
-    </div>
-  );
-}
+const ONE_BY_ONE_DELAY_MS = 1000;
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export default function ProviderDetailPage() {
   const params = useParams();
@@ -69,11 +60,21 @@ export default function ProviderDetailPage() {
   const [disabledModelIds, setDisabledModelIds] = useState([]);
   const [confirmState, setConfirmState] = useState(null);
   const [showAgRiskModal, setShowAgRiskModal] = useState(false);
+  const [oneByOneRunning, setOneByOneRunning] = useState(false);
+  const [oneByOneStopping, setOneByOneStopping] = useState(false);
+  const [oneByOneCurrentConnectionId, setOneByOneCurrentConnectionId] = useState(null);
+  const [oneByOneResults, setOneByOneResults] = useState({});
+  const [oneByOneSummary, setOneByOneSummary] = useState(null);
+  const stopOneByOneRef = useRef(false);
   const { copied, copy } = useCopyToClipboard();
 
   const AG_RISK_STORAGE_KEY = "ag_risk_confirmed";
 
-  const triggerAddConnection = () => {
+  const openOAuthConnection = () => {
+    setShowOAuthModal(true);
+  };
+
+  const triggerOAuthConnection = () => {
     if (providerId === "antigravity" && typeof window !== "undefined") {
       const confirmed = window.localStorage.getItem(AG_RISK_STORAGE_KEY) === "true";
       if (!confirmed) {
@@ -82,11 +83,24 @@ export default function ProviderDetailPage() {
       }
     }
     if (isOAuth) {
-      setShowOAuthModal(true);
+      openOAuthConnection();
       return;
     }
     setAddConnectionError("");
     setShowAddApiKeyModal(true);
+  };
+
+  const triggerApiKeyConnection = () => {
+    setAddConnectionError("");
+    setShowAddApiKeyModal(true);
+  };
+
+  const triggerAddConnection = () => {
+    if (isOAuth) {
+      triggerOAuthConnection();
+      return;
+    }
+    triggerApiKeyConnection();
   };
 
   const handleAgRiskConfirm = () => {
@@ -95,11 +109,10 @@ export default function ProviderDetailPage() {
     }
     setShowAgRiskModal(false);
     if (isOAuth) {
-      setShowOAuthModal(true);
+      openOAuthConnection();
       return;
     }
-    setAddConnectionError("");
-    setShowAddApiKeyModal(true);
+    triggerApiKeyConnection();
   };
 
   const providerInfo = providerNode
@@ -113,7 +126,9 @@ export default function ProviderDetailPage() {
         type: providerNode.type,
       }
     : (OAUTH_PROVIDERS[providerId] || APIKEY_PROVIDERS[providerId] || FREE_PROVIDERS[providerId] || FREE_TIER_PROVIDERS[providerId] || WEB_COOKIE_PROVIDERS[providerId]);
-  const isOAuth = !!OAUTH_PROVIDERS[providerId] || !!FREE_PROVIDERS[providerId];
+  const authModes = providerInfo?.authModes || [];
+  const isOAuth = !!OAUTH_PROVIDERS[providerId] || !!FREE_PROVIDERS[providerId] || authModes.includes("oauth");
+  const supportsApiKeyAuth = !!APIKEY_PROVIDERS[providerId] || authModes.includes("apikey");
   const isFreeNoAuth = !!FREE_PROVIDERS[providerId]?.noAuth;
   const models = getModelsByProviderId(providerId);
   const providerAlias = getProviderAlias(providerId);
@@ -121,6 +136,9 @@ export default function ProviderDetailPage() {
   const isOpenAICompatible = isOpenAICompatibleProvider(providerId);
   const isAnthropicCompatible = isAnthropicCompatibleProvider(providerId);
   const isCompatible = isOpenAICompatible || isAnthropicCompatible;
+  const hasDualAuthModes = !isCompatible && isOAuth && supportsApiKeyAuth;
+  const oauthConnectionLabel = providerId === "xai" ? "Grok Build OAuth" : "OAuth";
+  const apiKeyConnectionLabel = providerId === "xai" ? "xAI API Key" : "API Key";
   const thinkingConfig = AI_PROVIDERS[providerId]?.thinkingConfig || THINKING_CONFIG.extended;
   
   const providerStorageAlias = isCompatible ? providerId : providerAlias;
@@ -401,6 +419,98 @@ export default function ProviderDetailPage() {
     }
   };
 
+  const handleRunOneByOneTest = async () => {
+    if (oneByOneRunning || connections.length === 0) return;
+
+    const queuedState = Object.fromEntries(
+      connections.map((connection) => [connection.id, { state: "queued", error: null }]),
+    );
+
+    stopOneByOneRef.current = false;
+    setOneByOneRunning(true);
+    setOneByOneStopping(false);
+    setOneByOneCurrentConnectionId(null);
+    setOneByOneResults(queuedState);
+    setOneByOneSummary({ total: connections.length, completed: 0, passed: 0, failed: 0, stopped: false });
+
+    let passed = 0;
+    let failed = 0;
+
+    try {
+      for (let index = 0; index < connections.length; index += 1) {
+        if (stopOneByOneRef.current) {
+          setOneByOneSummary({
+            total: connections.length,
+            completed: index,
+            passed,
+            failed,
+            stopped: true,
+          });
+          break;
+        }
+
+        const connection = connections[index];
+        setOneByOneCurrentConnectionId(connection.id);
+        setOneByOneResults((prev) => ({
+          ...prev,
+          [connection.id]: { state: "testing", error: null },
+        }));
+
+        try {
+          const res = await fetch(`/api/providers/${connection.id}/test`, { method: "POST" });
+          const data = await res.json();
+          const valid = !!data.valid;
+
+          if (valid) {
+            passed += 1;
+          } else {
+            failed += 1;
+          }
+
+          setOneByOneResults((prev) => ({
+            ...prev,
+            [connection.id]: {
+              state: valid ? "success" : "failed",
+              error: valid ? null : (data.error || null),
+            },
+          }));
+        } catch (error) {
+          failed += 1;
+          setOneByOneResults((prev) => ({
+            ...prev,
+            [connection.id]: {
+              state: "failed",
+              error: error.message || "Test failed",
+            },
+          }));
+        }
+
+        setOneByOneSummary({
+          total: connections.length,
+          completed: index + 1,
+          passed,
+          failed,
+          stopped: false,
+        });
+
+        if (index < connections.length - 1) {
+          await sleep(ONE_BY_ONE_DELAY_MS);
+        }
+      }
+    } finally {
+      setOneByOneCurrentConnectionId(null);
+      setOneByOneRunning(false);
+      setOneByOneStopping(false);
+      stopOneByOneRef.current = false;
+    }
+  };
+
+  const handleStopOneByOneTest = () => {
+    if (!oneByOneRunning) return;
+    stopOneByOneRef.current = true;
+    setOneByOneStopping(true);
+  };
+
   const handleDelete = async (id) => {
     setConfirmState({
       title: "Delete Connection",
@@ -635,56 +745,49 @@ export default function ProviderDetailPage() {
   const isSelected = (connectionId) => selectedConnectionIds.includes(connectionId);
 
   const connectionsList = (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
-      <SortableContext items={connections.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-        <div className="flex min-w-0 flex-col divide-y divide-black/[0.03] dark:divide-white/[0.03]">
-          {connections.map((conn, index) => (
-            <SortableConnectionRow key={conn.id} id={conn.id}>
-              {({ attributes, listeners }) => (
-                <div className="flex min-w-0 items-stretch">
-                  <div className="flex-1 min-w-0">
-                    <ConnectionRow
-                      connection={conn}
-                      proxyPools={proxyPools}
-                      isOAuth={isOAuth}
-                      isFirst={index === 0}
-                      isLast={index === connections.length - 1}
-                      onMoveUp={() => handleSwapPriority(index, index - 1)}
-                      onMoveDown={() => handleSwapPriority(index, index + 1)}
-                      onDragHandle={{ attributes, listeners }}
-                      onToggleActive={(isActive) => handleUpdateConnectionStatus(conn.id, isActive)}
-                      onUpdateProxy={async (proxyPoolId) => {
-                        try {
-                          const res = await fetch(`/api/providers/${conn.id}`, {
-                            method: "PUT",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ proxyPoolId: proxyPoolId || null }),
-                          });
-                          if (res.ok) {
-                            setConnections(prev => prev.map(c =>
-                              c.id === conn.id
-                                ? { ...c, providerSpecificData: { ...c.providerSpecificData, proxyPoolId: proxyPoolId || null } }
-                                : c
-                            ));
-                          }
-                        } catch (error) {
-                          console.log("Error updating proxy:", error);
-                        }
-                      }}
-                      onEdit={() => {
-                        setSelectedConnection(conn);
-                        setShowEditModal(true);
-                      }}
-                      onDelete={() => handleDelete(conn.id)}
-                    />
-                  </div>
-                </div>
-              )}
-            </SortableConnectionRow>
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
+    <div className="flex min-w-0 flex-col divide-y divide-black/[0.03] dark:divide-white/[0.03]">
+      {connections
+        .map((conn, index) => (
+          <div key={conn.id} className="flex min-w-0 items-stretch">
+            <div className="flex-1 min-w-0">
+              <ConnectionRow
+                connection={conn}
+                proxyPools={proxyPools}
+                isOAuth={isOAuth}
+                isFirst={index === 0}
+                isLast={index === connections.length - 1}
+                onMoveUp={() => handleSwapPriority(index, index - 1)}
+                onMoveDown={() => handleSwapPriority(index, index + 1)}
+                onToggleActive={(isActive) => handleUpdateConnectionStatus(conn.id, isActive)}
+                onUpdateProxy={async (proxyPoolId) => {
+                  try {
+                    const res = await fetch(`/api/providers/${conn.id}`, {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ proxyPoolId: proxyPoolId || null }),
+                    });
+                    if (res.ok) {
+                      setConnections(prev => prev.map(c =>
+                        c.id === conn.id
+                          ? { ...c, providerSpecificData: { ...c.providerSpecificData, proxyPoolId: proxyPoolId || null } }
+                          : c
+                      ));
+                    }
+                  } catch (error) {
+                    console.log("Error updating proxy:", error);
+                  }
+                }}
+                onEdit={() => {
+                  setSelectedConnection(conn);
+                  setShowEditModal(true);
+                }}
+                onDelete={() => handleDelete(conn.id)}
+                oneByOneStatus={oneByOneResults[conn.id] || null}
+              />
+            </div>
+          </div>
+        ))}
+    </div>
   );
 
   const activePools = proxyPools.filter((p) => p.isActive === true);
@@ -1097,6 +1200,30 @@ export default function ProviderDetailPage() {
                   Apply Proxy
                 </Button>
               )}
+              {connections.length > 0 && (
+                <>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    icon="sync"
+                    onClick={handleRunOneByOneTest}
+                    disabled={oneByOneRunning}
+                  >
+                    {oneByOneRunning ? "Testing Connection One-by-One..." : "Test Connection One-by-One"}
+                  </Button>
+                  {oneByOneRunning && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      icon="stop"
+                      onClick={handleStopOneByOneTest}
+                      disabled={oneByOneStopping}
+                    >
+                      {oneByOneStopping ? "Stopping..." : "Stop"}
+                    </Button>
+                  )}
+                </>
+              )}
               {/* Thinking config */}
               {/* {thinkingConfig && (
                 <div className="flex items-center gap-2">
@@ -1142,25 +1269,61 @@ export default function ProviderDetailPage() {
                 <div className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary/10 text-primary shrink-0">
                   <span className="material-symbols-outlined text-[18px]">{isOAuth ? "lock" : "key"}</span>
                 </div>
-                <p className="text-sm text-text-muted">No connections yet</p>
+                <div className="min-w-0">
+                  <p className="text-sm text-text-muted">No connections yet</p>
+                  {hasDualAuthModes && (
+                    <p className="text-xs text-text-muted">
+                      Choose {oauthConnectionLabel} or {apiKeyConnectionLabel}.
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="flex gap-2">
-                {!isCompatible && providerId === "iflow" && (
-                  <Button size="sm" icon="cookie" variant="secondary" onClick={() => setShowIFlowCookieModal(true)}>
-                    Cookie
-                  </Button>
+                {hasDualAuthModes ? (
+                  <>
+                    <Button size="sm" icon="lock" variant="secondary" onClick={triggerOAuthConnection}>
+                      {oauthConnectionLabel}
+                    </Button>
+                    <Button size="sm" icon="key" onClick={triggerApiKeyConnection}>
+                      {apiKeyConnectionLabel}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {!isCompatible && providerId === "iflow" && (
+                      <Button size="sm" icon="cookie" variant="secondary" onClick={() => setShowIFlowCookieModal(true)}>
+                        Cookie
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      icon="add"
+                      onClick={triggerAddConnection}
+                    >
+                      {isCompatible ? "Add API Key" : (providerId === "iflow" ? "OAuth" : "Add Connection")}
+                    </Button>
+                  </>
                 )}
-                <Button
-                  size="sm"
-                  icon="add"
-                  onClick={triggerAddConnection}
-                >
-                  {isCompatible ? "Add API Key" : (providerId === "iflow" ? "OAuth" : "Add Connection")}
-                </Button>
               </div>
             </div>
           ) : (
             <>
+              {oneByOneSummary && (
+                <div className="mb-4 rounded-lg border border-black/10 bg-black/[0.02] px-3 py-2 text-xs text-text-muted dark:border-white/10 dark:bg-white/[0.03]">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span>Total: {oneByOneSummary.total}</span>
+                    <span>Completed: {oneByOneSummary.completed}</span>
+                    <span>Passed: {oneByOneSummary.passed}</span>
+                    <span>Failed: {oneByOneSummary.failed}</span>
+                    {oneByOneSummary.stopped && (
+                      <span className="text-amber-600 dark:text-amber-400">Stopped</span>
+                    )}
+                    {oneByOneRunning && oneByOneCurrentConnectionId && (
+                      <span>Running: {connections.find((conn) => conn.id === oneByOneCurrentConnectionId)?.name || oneByOneCurrentConnectionId}</span>
+                    )}
+                  </div>
+                </div>
+              )}
               {connectionsList}
               {!isCompatible && (
                 <div className="mt-4 grid grid-cols-1 gap-2 sm:flex">
@@ -1176,14 +1339,36 @@ export default function ProviderDetailPage() {
                       Cookie
                     </Button>
                   )}
-                  <Button
-                    size="sm"
-                    icon="add"
-                    onClick={triggerAddConnection}
-                    className="w-full sm:w-auto"
-                  >
-                    Add
-                  </Button>
+                  {hasDualAuthModes ? (
+                    <>
+                      <Button
+                        size="sm"
+                        icon="lock"
+                        variant="secondary"
+                        onClick={triggerOAuthConnection}
+                        className="w-full sm:w-auto"
+                      >
+                        {oauthConnectionLabel}
+                      </Button>
+                      <Button
+                        size="sm"
+                        icon="key"
+                        onClick={triggerApiKeyConnection}
+                        className="w-full sm:w-auto"
+                      >
+                        {apiKeyConnectionLabel}
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      size="sm"
+                      icon="add"
+                      onClick={triggerAddConnection}
+                      className="w-full sm:w-auto"
+                    >
+                      Add
+                    </Button>
+                  )}
                 </div>
               )}
             </>
